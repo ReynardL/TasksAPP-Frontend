@@ -25,9 +25,13 @@ function CreateTaskPage({ apiUrl }) {
   const handleCreateTask = (e) => {
     e.preventDefault();
 
-    let combinedDue = taskData.dueDate && taskData.dueTime 
-      ? `${taskData.dueDate}T${taskData.dueTime}` 
+    let combinedDue = taskData.dueDate 
+      ? taskData.dueTime 
+        ? `${taskData.dueDate}T${taskData.dueTime}` 
+        : taskData.dueDate
       : null;
+
+    console.log(`${taskData.dueDate}T${taskData.dueTime}`, combinedDue);
 
     const newTask = {
       title: taskData.title === "" ? null : taskData.title,
@@ -38,6 +42,8 @@ function CreateTaskPage({ apiUrl }) {
       repeat_amount: taskData.repeat_amount === "" ? null : taskData.repeat_amount,
       due: combinedDue,
     };
+
+    console.log(newTask);
 
     fetch(`${apiUrl}/tasks`, {
       method: "POST",
