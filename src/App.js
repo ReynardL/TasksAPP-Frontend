@@ -7,7 +7,7 @@ import SearchPage from "./components/SearchPage";
 import FilterPage from "./components/FilterPage";
 import DisplayTaskPage from "./components/DisplayTaskPage";
 
-const apiUrl = process.env.REACT_APP_API_URL;
+const apiUrl = process.env.REACT_APP_API_URL.replace(/\/$/, '');
 
 const App = () => {
 
