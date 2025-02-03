@@ -7,6 +7,7 @@ function EditTaskPage({ apiUrl }) {
   const location = useLocation(); 
   const initialTaskData = location.state ? location.state.taskData : {}; 
   const [taskData, setTaskData] = useState(initialTaskData);
+  const token = sessionStorage.getItem("token");
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -33,11 +34,12 @@ function EditTaskPage({ apiUrl }) {
       repeat_amount: taskData.repeat_amount === "" ? null : taskData.repeat_amount,
       due: combinedDue,
     };
-
+    
     fetch(`${apiUrl}/tasks/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
+        "Authorization": `Bearer ${token}`
       },
       body: JSON.stringify(updatedTask),
     })

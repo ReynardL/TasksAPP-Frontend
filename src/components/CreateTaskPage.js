@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 
 function CreateTaskPage({ apiUrl }) {
   const navigate = useNavigate();
+  const token = sessionStorage.getItem("token");
+  const selectedFolder = sessionStorage.getItem("selectedFolder");
   const [taskData, setTaskData] = useState({
     title: "",
     description: "",
@@ -39,10 +41,11 @@ function CreateTaskPage({ apiUrl }) {
       due: combinedDue,
     };
 
-    fetch(`${apiUrl}/tasks`, {
+    fetch(`${apiUrl}/folders/${selectedFolder}/tasks`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
       },
       body: JSON.stringify(newTask),
     })

@@ -6,27 +6,18 @@ import EditTaskPage from "./components/EditTaskPage";
 import SearchPage from "./components/SearchPage";
 import FilterPage from "./components/FilterPage";
 import DisplayTaskPage from "./components/DisplayTaskPage";
+import CreateFolderPage from "./components/CreateFolderPage";
+import DisplayFolderPage from "./components/DisplayFolderPage";
+import LoginPage from "./components/LoginPage";
+import RegisterPage from "./components/RegisterPage";
+import EditFolderPage from "./components/EditFolderPage";
+import AddMemberPage from "./components/AddMemberPage";
+import EditMemberPage from "./components/EditMemberPage";
 
 const apiUrl = process.env.REACT_APP_API_URL;
 
 const App = () => {
-
-  const fetchTasks = async () => {
-    try {
-      const response = await fetch(`${apiUrl}/tasks`); 
-      if (!response.ok) {
-        throw new Error("Failed to fetch tasks");
-      }
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error("Error in fetchTasks:", error);
-      throw error;
-    }
-  };
-
   const searchTasks = async (searchParams) => {
-
     const finalParams = {
       title: searchParams.title === "" ? null : searchParams.title,
       description: searchParams.description === "" ? null : searchParams.description,
@@ -36,22 +27,37 @@ const App = () => {
       due: searchParams.due === "" ? null : searchParams.due,
       created: searchParams.created === "" ? null : searchParams.created,
     };
+    const token = sessionStorage.getItem("token");
 
     try {
       const response = await fetch(`${apiUrl}/tasks/search`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          "Authorization": `Bearer ${token}`
         },
-      body: JSON.stringify(finalParams),
+        body: JSON.stringify(finalParams),
       });
       if (!response.ok) {
         throw new Error("Failed to fetch tasks");
       }
-      const data = await response.json();
-      return data;
+      return await response.json();
     } catch (error) {
       console.error("Error in searchTasks:", error);
+      throw error;
+    }
+  };
+
+  const apiRequest = async (endpoint) => {
+    try {
+      const token = sessionStorage.getItem("token");
+      const response = await fetch(`${apiUrl}/${endpoint}`, {headers: {"Authorization": `Bearer ${token}`}});
+      if (!response.ok) {
+        throw new Error(`Failed to fetch ${endpoint}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error(`Error in apiRequest for ${endpoint}:`, error);
       throw error;
     }
   };
@@ -61,7 +67,10 @@ const App = () => {
       <Routes>
         <Route
           path="/"
-          element={<MainPage fetchTasks={fetchTasks} searchTasks={searchTasks} />}
+          element={<MainPage 
+            searchTasks={searchTasks} 
+            apiRequest={apiRequest}
+          />}
         />
         <Route
           path="/create"
@@ -82,6 +91,34 @@ const App = () => {
         <Route
           path="/filter"
           element={<FilterPage />}
+        />
+        <Route
+          path="/folders/create"
+          element={<CreateFolderPage apiUrl={apiUrl} />}
+        />
+        <Route
+          path="/folders/:id"
+          element={<DisplayFolderPage apiUrl={apiUrl} />}
+        />
+        <Route
+          path="/folders/:id/edit"
+          element={<EditFolderPage apiUrl={apiUrl} />}
+        />
+        <Route
+          path="/folders/:id/members/add"
+          element={<AddMemberPage apiUrl={apiUrl} />}
+        />
+        <Route
+          path="/folders/:id/members/:memberId/edit"
+          element={<EditMemberPage apiUrl={apiUrl} />}
+        />
+        <Route
+          path="/login"
+          element={<LoginPage apiUrl={apiUrl} />}
+        />
+        <Route
+          path="/register"
+          element={<RegisterPage apiUrl={apiUrl} />}
         />
       </Routes>
     </Router>

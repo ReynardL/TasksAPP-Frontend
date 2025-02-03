@@ -4,6 +4,7 @@ import Badge from "./ui/badge";
 
 function DisplayTaskPage({ apiUrl }) {
   const navigate = useNavigate();
+  const token = sessionStorage.getItem("token");
   const { id } = useParams();
   const [taskData, setTaskData] = useState({
     id : "",    
@@ -20,7 +21,7 @@ function DisplayTaskPage({ apiUrl }) {
   });
 
   useEffect(() => {
-    fetch(`${apiUrl}/tasks/${id}`)
+    fetch(`${apiUrl}/tasks/${id}`, {headers: {"Authorization": `Bearer ${token}`}})
       .then((response) => response.json())
       .then((data) => {
         const dueDateTime = data.due ? data.due.split("T") : ["", ""];
@@ -70,7 +71,10 @@ function DisplayTaskPage({ apiUrl }) {
               : "never"}
           </p>
           <p>
-            <strong>Due:</strong> {taskData.dueDate} {taskData.dueTime}
+            <strong>Completed:</strong> {taskData.completed}
+          </p>
+          <p>
+          <strong>Due:</strong> {taskData.dueDate ? `${taskData.dueDate} ${taskData.dueTime}` : "no due date"}
           </p>
           <p>
             <strong>Created:</strong> {taskData.createdDate} {taskData.createdTime}
@@ -88,7 +92,7 @@ function DisplayTaskPage({ apiUrl }) {
           <button
             onClick={() => {
               if (window.confirm("Are you sure you want to delete this task?")) {
-                fetch(`${apiUrl}/tasks/${id}`, { method: "DELETE" })
+                fetch(`${apiUrl}/tasks/${id}`, { headers: {"Authorization": `Bearer ${token}`}, method: "DELETE" })
                   .then(() => navigate("/"))
                   .catch((error) => console.error("Error deleting task:", error));
               }
