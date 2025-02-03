@@ -14,7 +14,7 @@ import EditFolderPage from "./components/EditFolderPage";
 import AddMemberPage from "./components/AddMemberPage";
 import EditMemberPage from "./components/EditMemberPage";
 
-const apiUrl = process.env.REACT_APP_API_URL;
+const apiUrl = process.env.REACT_APP_API_URL.replace(/\/$/, '');
 
 const App = () => {
   const searchTasks = async (searchParams) => {

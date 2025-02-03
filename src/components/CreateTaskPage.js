@@ -27,8 +27,10 @@ function CreateTaskPage({ apiUrl }) {
   const handleCreateTask = (e) => {
     e.preventDefault();
 
-    let combinedDue = taskData.dueDate && taskData.dueTime 
-      ? `${taskData.dueDate}T${taskData.dueTime}` 
+    let combinedDue = taskData.dueDate 
+      ? taskData.dueTime 
+        ? `${taskData.dueDate}T${taskData.dueTime}` 
+        : taskData.dueDate
       : null;
 
     const newTask = {

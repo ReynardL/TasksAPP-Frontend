@@ -20,10 +20,11 @@ function EditTaskPage({ apiUrl }) {
   const handleUpdateTask = (e) => {
     e.preventDefault();
 
-    const combinedDue =
-      taskData.dueDate && taskData.dueTime
-        ? `${taskData.dueDate}T${taskData.dueTime}`
-        : null;
+    let combinedDue = taskData.dueDate 
+      ? taskData.dueTime 
+        ? `${taskData.dueDate}T${taskData.dueTime}` 
+        : taskData.dueDate
+      : null;
 
     const updatedTask = {
       title: taskData.title === "" ? null : taskData.title,
@@ -128,8 +129,8 @@ function EditTaskPage({ apiUrl }) {
             <div>
               <label className="block text-sm font-medium text-gray-700">Repeat Every:</label>
               <select
-                name="repeatType"
-                value={taskData.repeatType}
+                name="repeat_type"
+                value={taskData.repeat_type}
                 onChange={handleInputChange}
                 className="mt-1 block w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
@@ -144,8 +145,8 @@ function EditTaskPage({ apiUrl }) {
               <label className="block text-sm font-medium text-gray-700">Repeat Amount:</label>
               <input
                 type="number"
-                name="repeatAmount"
-                value={taskData.repeatAmount}
+                name="repeat_amount"
+                value={taskData.repeat_amount}
                 onChange={handleInputChange}
                 min="1"
                 max="1000"
